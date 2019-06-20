@@ -47,6 +47,7 @@ uint8_t filteredReading = 0;
 
 void setup() {
   init_adc();
+  init_dac();
   
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -270,7 +271,7 @@ void init_adc()
   ADC->REFCTRL.reg = ADC_REFCTRL_REFSEL_INTVCC1 | ADC_REFCTRL_REFCOMP;
   ADC->CTRLB.reg = ADC_CTRLB_RESSEL_8BIT | ADC_CTRLB_PRESCALER_DIV512 | ADC_CTRLB_FREERUN;
   //ADC->AVGCTRL.reg = ADC_AVGCTRL_SAMPLENUM_1;
-  ADC->INPUTCTRL.reg = ADC_INPUTCTRL_MUXPOS_PIN0 | ADC_INPUTCTRL_MUXNEG_GND |
+  ADC->INPUTCTRL.reg = ADC_INPUTCTRL_MUXPOS_PIN2 | ADC_INPUTCTRL_MUXNEG_GND |
       ADC_INPUTCTRL_GAIN_DIV2;
   //ADC->SAMPCTRL.reg = ADC_SAMPCTRL_SAMPLEN(0x3F);
   ADC->CALIB.reg = 0x388;
@@ -288,6 +289,15 @@ void init_adc()
   NVIC_SetPriority(ADC_IRQn, 0);
   NVIC_EnableIRQ(ADC_IRQn);
 }
+
+void init_dac()
+{
+  DAC->CTRLB.reg = (1<<6) | 1;
+  DAC->CTRLA.reg = (1<<1);
+  DAC->DATA.reg = 512;
+
+  
+  }
 
 void ADC_Handler()
 {
